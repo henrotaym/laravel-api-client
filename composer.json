@@ -1,0 +1,36 @@
+{
+    "name": "henrotaym/laravel-api-client",
+    "description": "Fluent api client using laravel Http facade.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mathieu Henrotay",
+            "email": "mathieu.henrotay@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Henrotaym\\LaravelApiClient\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Henrotaym\\LaravelApiClient\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Henrotaym\\LaravelApiClient\\Providers\\ClientServiceProvider"
+            ]
+        }
+    }
+}
