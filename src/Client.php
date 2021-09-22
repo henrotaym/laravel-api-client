@@ -51,7 +51,11 @@ class Client implements ClientContract
             : [];
 
         if ($request->hasBaseUrl()):
-            $options['base_uri'] = $request->baseUrl();
+            // Appending slash if base_url doesn't end with it
+            $options['base_uri'] = substr($request->baseUrl(), -1) === '/'
+                ? $request->baseUrl()
+                : $request->baseUrl() . "/"
+            ;
         endif;
 
         $client = Http::withOptions($options);
