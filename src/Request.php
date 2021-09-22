@@ -130,7 +130,8 @@ class Request implements RequestContract
         $hasQuery = strpos($this->url, '?') !== false;
         $isFirstIteration = true;
         
-        return $this->query->reduceWithKeys(function($url, $value, $name) use (&$isFirstIteration, &$hasQuery) {
+        $url = $this->url;
+        foreach($this->query as $name => $value):
             if (!$hasQuery && $isFirstIteration):
                 $url = "$url?";
                 $isFirstIteration = false;
@@ -138,9 +139,10 @@ class Request implements RequestContract
             else:
                 $url = "$url&";
             endif;
+            $url = "$url$name=$value";
+        endforeach;
 
-            return "$url$name=$value";
-        }, $this->url);
+        return $url;
     }
 
     public function verb(): string
