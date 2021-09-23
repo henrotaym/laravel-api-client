@@ -196,5 +196,23 @@ class Request implements RequestContract
     {
         return $this->isForm;
     }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'base_url' => $this->baseUrl(),
+            'url' => $this->url(),
+            'headers' => $this->headers()->toArray(),
+            'data' => $this->data()->toArray(),
+            'verb' => $this->verb(),
+            'is_form' => $this->isForm(),
+            'has_attachment' => $this->hasAttachment()
+        ];
+    }
     
 }

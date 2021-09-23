@@ -2,9 +2,10 @@
 namespace Henrotaym\LaravelApiClient\Contracts;
 
 use Illuminate\Support\Collection;
+use Illuminate\Contracts\Support\Arrayable;
 use Henrotaym\LaravelApiClient\Contracts\FileContract;
 
-interface RequestContract
+interface RequestContract extends Arrayable
 {
     public function addHeaders($headers);
 
