@@ -2,6 +2,7 @@
 namespace Henrotaym\LaravelApiClient\Tests\Unit;
 
 use Henrotaym\LaravelApiClient\Client;
+use Henrotaym\LaravelHelpers\Facades\Helpers;
 use Henrotaym\LaravelApiClient\Tests\TestCase;
 use Henrotaym\LaravelApiClient\Contracts\ClientContract;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;

@@ -1,6 +1,7 @@
 <?php
 namespace Henrotaym\LaravelApiClient;
 
+use Henrotaym\LaravelHelpers\Facades\Helpers;
 use Illuminate\Http\Client\Response as ClientResponse;
 use Henrotaym\LaravelApiClient\Contracts\ResponseContract;
 
@@ -25,10 +26,14 @@ class Response implements ResponseContract
 
     public function get(bool $as_array = false)
     {
-        if (!$this->ok()):
+        [$error, $body] = Helpers::try(function() use ($as_array) {
+            return json_decode($this->response->body(), $as_array);
+        });
+
+        if ($error):
             return null;
         endif;
 
-        return json_decode($this->response->body(), $as_array);
+        return $body;
     }
 }
