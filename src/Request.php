@@ -124,6 +124,19 @@ class Request implements RequestContract
         
         return $this;
     }
+
+    /**
+     * Defining authorization header as basic.
+     * 
+     * @param string $username
+     * @param string $password
+     * @return self
+     */
+    public function setBasicAuth(string $username, string $password = ""): self
+    {
+        $to_encode = "Basic $username" . $password ? ":$password" : "";
+        return $this->addHeaders(['Authorization' => base64_encode($to_encode)]);
+    }
     
     public function url(): string
     {

@@ -22,6 +22,14 @@ interface RequestContract extends Arrayable
     public function setVerb(string $verb);
     
     public function setIsForm(bool $isForm);
+
+    /**
+     * Defining authorization header as basic.
+     * 
+     * @param string $username
+     * @param string $password
+     */
+    public function setBasicAuth(string $username, string $password = "");
     
     public function url(): string;
 
