@@ -134,8 +134,8 @@ class Request implements RequestContract
      */
     public function setBasicAuth(string $username, string $password = ""): self
     {
-        $to_encode = "Basic $username" . $password ? ":$password" : "";
-        return $this->addHeaders(['Authorization' => base64_encode($to_encode)]);
+        $to_encode = "$username" . ($password ? ":$password" : "");
+        return $this->addHeaders(['Authorization' => "Basic " . base64_encode($to_encode)]);
     }
     
     public function url(): string
