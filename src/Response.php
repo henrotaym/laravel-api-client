@@ -19,11 +19,21 @@ class Response implements ResponseContract
         return $this->response;
     }
 
+    /**
+     * Telling if response can be considered as successful
+     * 
+     * @return bool
+     */
     public function ok(): bool
     {
         return $this->response->ok();
     }
 
+    /**
+     * Getting response actual body.
+     * 
+     * @return array|null|stdClass
+     */
     public function get(bool $as_array = false)
     {
         [$error, $body] = Helpers::try(function() use ($as_array) {
@@ -35,5 +45,18 @@ class Response implements ResponseContract
         endif;
 
         return $body;
+    }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            "ok" => $this->ok(),
+            "body" => $this->get()
+        ];
     }
 }
