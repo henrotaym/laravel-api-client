@@ -56,7 +56,7 @@ class Response implements ResponseContract
     {
         return [
             "ok" => $this->ok(),
-            "body" => $this->get()
+            "body" => $this->get(true)
         ];
     }
 }
