@@ -222,6 +222,7 @@ class Request implements RequestContract
             'url' => $this->url(),
             'headers' => $this->headers()->toArray(),
             'data' => $this->data()->toArray(),
+            'query' => $this->query->toArray(),
             'verb' => $this->verb(),
             'is_form' => $this->isForm(),
             'has_attachment' => $this->hasAttachment()
