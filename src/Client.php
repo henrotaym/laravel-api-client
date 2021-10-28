@@ -4,11 +4,15 @@ namespace Henrotaym\LaravelApiClient;
 use Illuminate\Support\Facades\Http;
 use Henrotaym\LaravelApiClient\Response;
 use Illuminate\Http\Client\PendingRequest;
+use Henrotaym\LaravelApiClient\TryResponse;
+use Henrotaym\LaravelHelpers\Facades\Helpers;
 use Illuminate\Http\Client\Response as ClientResponse;
 use Henrotaym\LaravelApiClient\Contracts\ClientContract;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 use Henrotaym\LaravelApiClient\Contracts\ResponseContract;
 use Henrotaym\LaravelApiClient\Contracts\CredentialContract;
+use Henrotaym\LaravelApiClient\Contracts\TryResponseContract;
+use Henrotaym\LaravelApiClient\Exceptions\RequestRelatedException;
 
 class Client implements ClientContract
 {
@@ -38,6 +42,33 @@ class Client implements ClientContract
         $response = call_user_func_array([$client, $request->verb()], $requestArgs);
 
         return $this->response($response);
+    }
+
+    public function try(RequestContract $request, $exception): TryResponseContract
+    {
+        [$error, $response] = Helpers::try(function() use (&$request) {
+            return $this->start($request);
+        });
+        // instanciating try response
+        $try_response = new TryResponse();
+        
+        // Instanciating exception
+        $error_exception = is_string($exception) ? new RequestRelatedException($exception) : $exception;
+        $error_exception->setRequest($request);
+
+        if ($error):
+            // Setting error on exception
+            return $try_response
+                ->setError($error_exception->setError($error));
+        endif;
+
+        if (!$response->ok()):
+            // Setting response on exception
+            return $try_response
+                ->setError($error_exception->setResponse($response));
+        endif;
+
+        return $try_response->setResponse($response);
     }
 
     public function httpClient(RequestContract &$request): PendingRequest
