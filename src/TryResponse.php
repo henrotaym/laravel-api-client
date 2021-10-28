@@ -84,6 +84,6 @@ class TryResponse implements TryResponseContract
      */
     public function ok(): bool
     {
-        return $this->error && $this->response->ok();
+        return !$this->error && $this->response->ok();
     }
 }
