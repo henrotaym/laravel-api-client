@@ -24,7 +24,7 @@ interface ClientContract
      * @param Throwable|string $exception if string given, it will be used as exception message.
      * @return ResponseContract
      */
-    public function try(RequestContract $request, $exception = null): TryResponseContract;
+    public function try(RequestContract $request, $exception): TryResponseContract;
 
     /** 
      * Credentials associated to client.
