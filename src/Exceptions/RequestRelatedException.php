@@ -22,11 +22,18 @@ class RequestRelatedException extends Exception
     protected $request;
 
     /**
-     * Request that actually failed.
+     * Response sent back. Null meaning failure before even making request to resource.
      * 
-     * @var ResponseContract
+     * @var ResponseContract|null
      */
     protected $response;
+
+    /**
+     * Potential error happening before making request.
+     * 
+     * @var Exception|null Null if no exception during process.
+     */
+    protected $error;
 
     /**
      * Setting linked request
@@ -55,13 +62,27 @@ class RequestRelatedException extends Exception
     }
 
     /**
+     * Setting error happening when making request.
+     * 
+     * @param Exception $exception
+     * @return self
+     */
+    public function setError(Exception $error): self
+    {
+        $this->error = $error;
+
+        return $this;
+    }
+
+    /**
      * Exception context to log with.
      */
     public function context()
     {
         return array_merge([
             'request' => $this->request->toArray(),
-            'response' => $this->response->toArray()
+            'response' => optional($this->response)->toArray(),
+            'error' => optional($this->error)->getMessage(),
         ], $this->additionalContext());
     }
 
