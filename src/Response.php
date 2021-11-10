@@ -26,7 +26,7 @@ class Response implements ResponseContract
      */
     public function ok(): bool
     {
-        return $this->response->ok();
+        return $this->response->successful();
     }
 
     /**
