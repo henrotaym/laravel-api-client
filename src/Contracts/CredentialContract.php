@@ -7,6 +7,9 @@ interface CredentialContract
 {
     /**
      * Preparing request.
+     * 
+     * @param RequestContract $request
+     * @return void
      */
     public function prepare(RequestContract &$request);
 }
