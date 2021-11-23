@@ -140,22 +140,14 @@ class Request implements RequestContract
     
     public function url(): string
     {
-        $hasQuery = strpos($this->url, '?') !== false;
-        $isFirstIteration = true;
+        if ($this->query->isEmpty()):
+            return $this->url;
+        endif;
         
-        $url = $this->url;
-        foreach($this->query as $name => $value):
-            if (!$hasQuery && $isFirstIteration):
-                $url = "$url?";
-                $isFirstIteration = false;
-                $hasQuery = true;
-            else:
-                $url = "$url&";
-            endif;
-            $url = "$url$name=$value";
-        endforeach;
+        $has_query = strpos($this->url, '?') !== false;
+        $query = http_build_query($this->query->all());
 
-        return $url;
+        return $this->url . ($has_query ? "&" : "?") . $query;
     }
 
     public function verb(): string
