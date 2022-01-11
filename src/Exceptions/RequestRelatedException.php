@@ -2,6 +2,7 @@
 namespace Henrotaym\LaravelApiClient\Exceptions;
 
 use Exception;
+use Throwable;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 use Henrotaym\LaravelApiClient\Contracts\ResponseContract;
 
@@ -31,7 +32,7 @@ class RequestRelatedException extends Exception
     /**
      * Potential error happening before making request.
      * 
-     * @var Exception|null Null if no exception during process.
+     * @var Throwable|null Null if no exception during process.
      */
     protected $error;
 
@@ -64,10 +65,10 @@ class RequestRelatedException extends Exception
     /**
      * Setting error happening when making request.
      * 
-     * @param Exception $exception
+     * @param Throwable $error
      * @return self
      */
-    public function setError(Exception $error): self
+    public function setError(Throwable $error): self
     {
         $this->error = $error;
 
