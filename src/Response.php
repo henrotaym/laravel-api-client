@@ -7,13 +7,28 @@ use Henrotaym\LaravelApiClient\Contracts\ResponseContract;
 
 class Response implements ResponseContract
 {
+    /**
+     * Underlying response
+     * 
+     * @var ClientResponse
+     */
     protected $response;
 
+    /**
+     * Constructing response 
+     * 
+     * @param ClientResponse $response Underlying response.
+     */
     public function __construct(ClientResponse $response)
     {
         $this->response = $response;
     }
 
+    /** 
+     * Getting underlying response
+     * 
+     * @return ClientResponse
+     */
     public function response(): ClientResponse
     {
         return $this->response;

@@ -3,6 +3,7 @@ namespace Henrotaym\LaravelApiClient\Contracts;
 
 use stdClass;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Client\Response as ClientResponse;
 
 interface ResponseContract extends Arrayable
 {
@@ -19,4 +20,11 @@ interface ResponseContract extends Arrayable
      * @return array|null|stdClass
      */
     public function get(bool $as_array = false);
+
+    /** 
+     * Getting underlying response
+     * 
+     * @return ClientResponse
+     */
+    public function response(): ClientResponse;
 }

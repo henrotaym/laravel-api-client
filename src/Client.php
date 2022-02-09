@@ -16,18 +16,41 @@ use Henrotaym\LaravelApiClient\Exceptions\RequestRelatedException;
 
 class Client implements ClientContract
 {
+    /**
+     * Credential.
+     * 
+     * @var CredentialContract|null
+     */
     protected $credential;
 
+    /**
+     * Constructing client.
+     * 
+     * @param CredentialContract|null $credential
+     * @return void 
+     */
     public function __construct(CredentialContract $credential = null)
     {
         $this->credential = $credential;
     }
 
+    /**
+     * Transforming ClientResponse to response.
+     * 
+     * @param ClientResponse $response Underlying response.
+     * @return ResponseContract
+     */
     protected function response(ClientResponse $response): ResponseContract
     {
         return new Response($response);
     }
-
+    
+    /** 
+     * Starting a request.
+     * 
+     * @param RequestContract $request
+     * @return ResponseContract
+     */
     public function start(RequestContract $request): ResponseContract
     {
         $client = $this->httpClient($request);
@@ -44,6 +67,13 @@ class Client implements ClientContract
         return $this->response($response);
     }
 
+    /** 
+     * Trying a request.
+     * 
+     * @param RequestContract $request
+     * @param RequestRelatedException|string $exception if string given, it will be used as exception message.
+     * @return TryResponseContract
+     */
     public function try(RequestContract $request, $exception): TryResponseContract
     {
         [$error, $response] = Helpers::try(function() use (&$request) {
@@ -71,6 +101,12 @@ class Client implements ClientContract
         return $try_response->setResponse($response);
     }
 
+    /**
+     * Setting up underlying HTTP client.
+     * 
+     * @param RequestContract $request Request to use.
+     * @return PendingRequest Request waiting to be executed.
+     */
     public function httpClient(RequestContract &$request): PendingRequest
     {
         if ($this->credential):
@@ -106,6 +142,11 @@ class Client implements ClientContract
         return $client;
     }
 
+    /** 
+     * Credentials associated to client.
+     * 
+     * @return CredentialContract|null
+     */
     public function credential(): ?CredentialContract
     {
         return $this->credential;
@@ -115,8 +156,9 @@ class Client implements ClientContract
      * Setting credentials associated to client.
      * 
      * @param CredentialContract|null
+     * @return static
      */
-    public function setCredential(?CredentialContract $credential): self
+    public function setCredential(?CredentialContract $credential): ClientContract
     {
         $this->credential = $credential;
 

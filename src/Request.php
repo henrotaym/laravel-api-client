@@ -50,6 +50,11 @@ class Request implements RequestContract
         $verb = "GET"
     ;
 
+    /**
+     * Constructing instance.
+     * 
+     * @return void
+     */
     public function __construct()
     {
         $this->query = collect();
@@ -57,21 +62,39 @@ class Request implements RequestContract
         $this->headers = collect();
     }
 
-    public function setVerb(string $verb): self
+    /**
+     * Setting verb.
+     * 
+     * @param string verb
+     * @return static
+     */
+    public function setVerb(string $verb): RequestContract
     {
         $this->verb = strtoupper($verb);
         
         return $this;
     }
 
-    public function setUrl(string $url): self
+    /**
+     * Setting url.
+     * 
+     * @param string url
+     * @return static
+     */
+    public function setUrl(string $url): RequestContract
     {
         $this->url = $url;
         
         return $this;
     }
 
-    public function addHeaders($headers): self
+    /**
+     * Adding headers.
+     * 
+     * @param array $headers
+     * @return static
+     */
+    public function addHeaders($headers): RequestContract
     {
         $this->headers = $this->headers->merge( 
             is_array($headers) 
@@ -82,7 +105,13 @@ class Request implements RequestContract
         return $this;
     }
 
-    public function addQuery($query): self
+    /**
+     * Adding query parameters.
+     * 
+     * @param array $query
+     * @return static
+     */
+    public function addQuery($query): RequestContract
     {
         $this->query = $this->query
             ->merge( 
@@ -94,7 +123,13 @@ class Request implements RequestContract
         return $this;
     }
 
-    public function addData($data): self
+    /**
+     * Adding data.
+     * 
+     * @param array $data
+     * @return static
+     */
+    public function addData($data): RequestContract
     {
         $this->data = $this->data->merge( is_array($data) 
             ? $data 
@@ -104,21 +139,39 @@ class Request implements RequestContract
         return $this;
     }
 
-    public function setAttachment(FileContract $file): self
+    /**
+     * Setting attachment.
+     * 
+     * @param FileContract file
+     * @return static
+     */
+    public function setAttachment(FileContract $file): RequestContract
     {
         $this->attachment = $file;
         
         return $this;
     }
 
-    public function setBaseUrl(string $baseUrl): self
+    /**
+     * Setting base url.
+     * 
+     * @param string baseUrl
+     * @return static
+     */
+    public function setBaseUrl(string $baseUrl): RequestContract
     {
         $this->baseUrl = $baseUrl;
         
         return $this;
     }
     
-    public function setIsForm(bool $isForm): self
+    /**
+     * Setting if request should be sent as form.
+     * 
+     * @param bool isForm
+     * @return static
+     */
+    public function setIsForm(bool $isForm): RequestContract
     {
         $this->isForm = $isForm;
         
@@ -130,14 +183,19 @@ class Request implements RequestContract
      * 
      * @param string $username
      * @param string $password
-     * @return self
+     * @return static
      */
-    public function setBasicAuth(string $username, string $password = ""): self
+    public function setBasicAuth(string $username, string $password = ""): RequestContract
     {
         $to_encode = "$username" . ($password ? ":$password" : "");
         return $this->addHeaders(['Authorization' => "Basic " . base64_encode($to_encode)]);
     }
     
+    /**
+     * Getting url.
+     * 
+     * @return string
+     */
     public function url(): string
     {
         if ($this->query->isEmpty()):
@@ -150,53 +208,103 @@ class Request implements RequestContract
         return $this->url . ($has_query ? "&" : "?") . $query;
     }
 
+    /**
+     * Getting verb.
+     * 
+     * @return string
+     */
     public function verb(): string
     {
         return $this->verb;
     }
 
+    /**
+     * Getting base url.
+     * 
+     * @return string|null
+     */
     public function baseUrl(): ?string
     {
         return $this->baseUrl;
     }
 
+    /**
+     * Getting data.
+     * 
+     * @return Collection
+     */
     public function data(): Collection
     {
         return $this->data;
     }
 
+    /**
+     * Getting headers.
+     * 
+     * @return Collection
+     */
     public function headers(): Collection
     {
         return $this->headers;
     }
 
+    /**
+     * Getting attachment.
+     * 
+     * @return FileContract|null
+     */
     public function attachment(): ?FileContract
     {
         return $this->attachment;
     }
 
+    /**
+     * Telling if request is having attachment.
+     * 
+     * @return bool
+     */
     public function hasAttachment(): bool
     {
         return $this->attachment instanceof FileContract;
     }
 
+    /**
+     * Telling if request is having headers.
+     * 
+     * @return bool
+     */
     public function hasHeaders(): bool
     {
         return $this->headers->isNotEmpty();
     }
 
+    /**
+     * Telling if request is having base url.
+     * 
+     * @return bool
+     */
     public function hasBaseUrl(): bool
     {
         return is_string($this->baseUrl) 
             && strlen($this->baseUrl) > 0;
     }
 
+    /**
+     * Telling if request is having data.
+     * 
+     * @return bool
+     */
     public function hasData(): bool
     {
         return $this->verb !== 'GET'
             && $this->data->isNotEmpty();
     }
 
+    /**
+     * Telling if request is a form.
+     * 
+     * @return bool
+     */
     public function isForm(): bool
     {
         return $this->isForm;

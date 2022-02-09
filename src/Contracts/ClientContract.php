@@ -6,6 +6,7 @@ use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 use Henrotaym\LaravelApiClient\Contracts\ResponseContract;
 use Henrotaym\LaravelApiClient\Contracts\CredentialContract;
 use Henrotaym\LaravelApiClient\Contracts\TryResponseContract;
+use Henrotaym\LaravelApiClient\Exceptions\RequestRelatedException;
 
 interface ClientContract
 {
@@ -21,15 +22,15 @@ interface ClientContract
      * Trying a request.
      * 
      * @param RequestContract $request
-     * @param Throwable|string $exception if string given, it will be used as exception message.
-     * @return ResponseContract
+     * @param RequestRelatedException|string $exception if string given, it will be used as exception message.
+     * @return TryResponseContract
      */
     public function try(RequestContract $request, $exception): TryResponseContract;
 
     /** 
      * Credentials associated to client.
      * 
-     * @return ResponseContract|null
+     * @return CredentialContract|null
      */
     public function credential(): ?CredentialContract;
 
@@ -37,6 +38,7 @@ interface ClientContract
      * Setting credentials associated to client.
      * 
      * @param CredentialContract|null
+     * @return static
      */
-    public function setCredential(?CredentialContract $credential);
+    public function setCredential(?CredentialContract $credential): ClientContract;
 }
