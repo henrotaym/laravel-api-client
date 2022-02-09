@@ -1,17 +1,21 @@
 <?php
 namespace Henrotaym\LaravelApiClient\Tests;
 
-use Orchestra\Testbench\TestCase as BaseTestCase;
-use Henrotaym\LaravelHelpers\Providers\HelperServiceProvider;
+use Henrotaym\LaravelApiClient\Package;
 use Henrotaym\LaravelApiClient\Providers\ClientServiceProvider;
+use Henrotaym\LaravelPackageVersioning\Testing\VersionablePackageTestCase;
 
-class TestCase extends BaseTestCase
+class TestCase extends VersionablePackageTestCase
 {
-    protected function getPackageProviders($app)
+    public static function getPackageClass(): string
+    {
+        return Package::class;
+    }
+    
+    public function getServiceProviders(): array
     {
         return [
-            ClientServiceProvider::class,
-            HelperServiceProvider::class
+            ClientServiceProvider::class
         ];
     }
 }

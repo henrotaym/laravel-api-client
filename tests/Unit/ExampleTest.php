@@ -1,14 +1,13 @@
 <?php
 namespace Henrotaym\LaravelApiClient\Tests\Unit;
 
-use Henrotaym\LaravelApiClient\Client;
-use Henrotaym\LaravelHelpers\Facades\Helpers;
 use Henrotaym\LaravelApiClient\Tests\TestCase;
-use Henrotaym\LaravelApiClient\Contracts\ClientContract;
-use Henrotaym\LaravelApiClient\Contracts\RequestContract;
+use Henrotaym\LaravelPackageVersioning\Testing\Traits\InstallPackageTest;
 
 class ExampleTest extends TestCase
 {
+    use InstallPackageTest;
+
     /**
      * @test
      */
