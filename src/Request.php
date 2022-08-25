@@ -29,6 +29,11 @@ class Request implements RequestContract
          */
         $isForm = false,
         /**
+         * Request should be sent as multi-part form data.
+         * @var bool
+         */
+        $isMultipart = false,
+        /**
          * Request attachment
          * @var ?FileContract
          */
@@ -179,6 +184,19 @@ class Request implements RequestContract
     }
 
     /**
+     * Setting request as multipart.
+     * 
+     * @param bool $isMultipart
+     * @return static
+     */
+    public function setIsMultipart(bool $isMultipart): RequestContract
+    {
+        $this->isMultipart = $isMultipart;
+
+        return $this;
+    }
+
+    /**
      * Defining authorization header as basic.
      * 
      * @param string $username
@@ -311,6 +329,16 @@ class Request implements RequestContract
     }
 
     /**
+     * Telling if request is multipart.
+     * 
+     * @return bool
+     */
+    public function isMultipart(): bool
+    {
+        return $this->isMultipart;
+    }
+
+    /**
      * Get the instance as an array.
      *
      * @return array
@@ -325,6 +353,7 @@ class Request implements RequestContract
             'query' => $this->query->toArray(),
             'verb' => $this->verb(),
             'is_form' => $this->isForm(),
+            'is_multipart' => $this->isForm(),
             'has_attachment' => $this->hasAttachment()
         ];
     }

@@ -11,6 +11,7 @@ use Henrotaym\LaravelApiClient\Contracts\ClientContract;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 use Henrotaym\LaravelApiClient\Contracts\ResponseContract;
 use Henrotaym\LaravelApiClient\Contracts\CredentialContract;
+use Henrotaym\LaravelApiClient\Contracts\MultipartEncoderContract;
 use Henrotaym\LaravelApiClient\Contracts\TryResponseContract;
 use Henrotaym\LaravelApiClient\Exceptions\RequestRelatedException;
 
@@ -24,14 +25,24 @@ class Client implements ClientContract
     protected $credential;
 
     /**
+     * Multipart encoder.
+     * 
+     * @var MultipartEncoderContract
+     */
+    protected $multipartEncoder;
+
+    /**
      * Constructing client.
      * 
      * @param CredentialContract|null $credential
      * @return void 
      */
-    public function __construct(CredentialContract $credential = null)
-    {
+    public function __construct(
+        CredentialContract $credential = null,
+        MultipartEncoderContract $multipartEncoder
+    ) {
         $this->credential = $credential;
+        $this->multipartEncoder = $multipartEncoder;
     }
 
     /**
@@ -59,7 +70,9 @@ class Client implements ClientContract
             $request->url()
         ];
         if ($request->hasData()):
-            $requestArgs[] = $request->data()->all();
+            $requestArgs[] = $request->isMultipart() ?
+                $this->multipartEncoder->flatten($request->data()->all())
+                : $request->data()->all();
         endif;
 
         $response = call_user_func_array([$client, $request->verb()], $requestArgs);
@@ -133,6 +146,10 @@ class Client implements ClientContract
 
         if ($request->isForm()):
             $client->asForm();
+        endif;
+
+        if ($request->isMultipart()):
+            $client->asMultipart();
         endif;
 
         if($request->hasAttachment()):

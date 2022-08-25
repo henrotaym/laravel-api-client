@@ -72,6 +72,14 @@ interface RequestContract extends Arrayable
     public function setIsForm(bool $isForm): RequestContract;
 
     /**
+     * Setting request as multipart.
+     * 
+     * @param bool $isMultipart
+     * @return static
+     */
+    public function setIsMultipart(bool $isMultipart): RequestContract;
+
+    /**
      * Defining authorization header as basic.
      * 
      * @param string $username
@@ -156,4 +164,11 @@ interface RequestContract extends Arrayable
      * @return bool
      */
     public function isForm(): bool;
+
+    /**
+     * Telling if request is multipart.
+     * 
+     * @return bool
+     */
+    public function isMultipart(): bool;
 }
