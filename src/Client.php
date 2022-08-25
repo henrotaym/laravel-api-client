@@ -38,11 +38,10 @@ class Client implements ClientContract
      * @return void 
      */
     public function __construct(
-        CredentialContract $credential = null,
-        MultipartEncoderContract $multipartEncoder
+        ?CredentialContract $credential = null,
     ) {
         $this->credential = $credential;
-        $this->multipartEncoder = $multipartEncoder;
+        $this->multipartEncoder = app()->make(MultipartEncoderContract::class);
     }
 
     /**

@@ -19,9 +19,9 @@ class ClientServiceProvider extends VersionablePackageServiceProvider
 
     protected function addToRegister(): void
     {
+        $this->app->bind(MultipartEncoderContract::class, MultipartEncoder::class);
         $this->app->bind(ClientContract::class, Client::class);
         $this->app->bind(RequestContract::class, Request::class);
-        $this->app->bind(MultipartEncoderContract::class, MultipartEncoder::class);
     }
 
     protected function addToBoot(): void
