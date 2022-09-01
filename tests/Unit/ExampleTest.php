@@ -1,6 +1,7 @@
 <?php
 namespace Henrotaym\LaravelApiClient\Tests\Unit;
 
+use Henrotaym\LaravelApiClient\Contracts\Encoders\JsonEncoderContract;
 use Henrotaym\LaravelApiClient\Tests\TestCase;
 use Henrotaym\LaravelPackageVersioning\Testing\Traits\InstallPackageTest;
 

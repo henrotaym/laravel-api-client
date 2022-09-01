@@ -1,33 +1,40 @@
 <?php
-namespace Henrotaym\LaravelApiClient;
+namespace Henrotaym\LaravelApiClient\Encoders;
 
-use Henrotaym\LaravelApiClient\Contracts\MultipartEncoderContract;
 use Illuminate\Contracts\Support\Arrayable;
+use Henrotaym\LaravelApiClient\Contracts\Encoders\MultipartEncoderContract;
+use Henrotaym\LaravelApiClient\Encoders\_Private\Encoder;
+use Henrotaym\LaravelApiClient\Encoders\Traits\HasSingleValuesToFormat;
 
 /**
  * Encoding to valid multipart data.
  */
 class MultipartEncoder implements MultipartEncoderContract
 {
+    use HasSingleValuesToFormat;
+
     /**
-     * Flatten given data.
+     * Format given data.
      * 
-     * @param array $data
+     * @param array|Arrayable $data
      * @return array
      */
-    public function flatten(array $data): array
+    public function format(array|Arrayable $data): array
     {
-        return $this->flattenRecursively($data);
+        return $this->formatRecursively($data instanceof Arrayable ?
+            $data->toArray()
+            : $data
+        );
     }
 
     /**
-     * Flatten recursively given data.
+     * Formatting recursively given data.
      * 
      * @param array $data Data to flatten
      * @param string $namespace Current namespace (should not be given)
      * @param array $flattened Current flattened representation (should not be given)
      */
-    protected function flattenRecursively(
+    protected function formatRecursively(
         array $data,
         string $namespace = "",
         array &$flattened = []
@@ -36,13 +43,14 @@ class MultipartEncoder implements MultipartEncoderContract
             $currentNamepace = $namespace ?
                 "{$namespace}[{$key}]"
                 : $key;
+
             $currentValue = $value instanceof Arrayable ?
                 $value->toArray()
                 : $value;
 
             is_array($currentValue) ?
-                $this->flattenRecursively($currentValue, $currentNamepace, $flattened)
-                : $flattened[$currentNamepace] = $currentValue;
+                $this->formatRecursively($currentValue, $currentNamepace, $flattened)
+                : $flattened[$currentNamepace] = $this->formatSingleValue($value);
         endforeach;
 
         return $flattened;

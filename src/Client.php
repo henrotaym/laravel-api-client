@@ -11,9 +11,10 @@ use Henrotaym\LaravelApiClient\Contracts\ClientContract;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 use Henrotaym\LaravelApiClient\Contracts\ResponseContract;
 use Henrotaym\LaravelApiClient\Contracts\CredentialContract;
-use Henrotaym\LaravelApiClient\Contracts\MultipartEncoderContract;
 use Henrotaym\LaravelApiClient\Contracts\TryResponseContract;
 use Henrotaym\LaravelApiClient\Exceptions\RequestRelatedException;
+use Henrotaym\LaravelApiClient\Contracts\Encoders\JsonEncoderContract;
+use Henrotaym\LaravelApiClient\Contracts\Encoders\MultipartEncoderContract;
 
 class Client implements ClientContract
 {
@@ -32,6 +33,13 @@ class Client implements ClientContract
     protected $multipartEncoder;
 
     /**
+     * Json encoder.
+     * 
+     * @var JsonEncoderContract
+     */
+    protected $jsonEncoder;
+
+    /**
      * Constructing client.
      * 
      * @param CredentialContract|null $credential
@@ -42,6 +50,7 @@ class Client implements ClientContract
     ) {
         $this->credential = $credential;
         $this->multipartEncoder = app()->make(MultipartEncoderContract::class);
+        $this->jsonEncoder = app()->make(JsonEncoderContract::class);
     }
 
     /**
@@ -70,8 +79,8 @@ class Client implements ClientContract
         ];
         if ($request->hasData()):
             $requestArgs[] = $request->isMultipart() ?
-                $this->multipartEncoder->flatten($request->data()->all())
-                : $request->data()->all();
+                $this->multipartEncoder->format($request->data())
+                : $this->jsonEncoder->format($request->data());
         endif;
 
         $response = call_user_func_array([$client, $request->verb()], $requestArgs);
