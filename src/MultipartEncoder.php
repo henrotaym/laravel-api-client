@@ -33,7 +33,9 @@ class MultipartEncoder implements MultipartEncoderContract
         array &$flattened = []
     ) {
         foreach ($data as $key => $value):
-            $currentNamepace = "{$namespace}[{$key}]";
+            $currentNamepace = $namespace ?
+                "{$namespace}[{$key}]"
+                : $key;
             $currentValue = $value instanceof Arrayable ?
                 $value->toArray()
                 : $value;

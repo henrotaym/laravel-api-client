@@ -353,7 +353,7 @@ class Request implements RequestContract
             'query' => $this->query->toArray(),
             'verb' => $this->verb(),
             'is_form' => $this->isForm(),
-            'is_multipart' => $this->isForm(),
+            'is_multipart' => $this->isMultipart(),
             'has_attachment' => $this->hasAttachment()
         ];
     }
