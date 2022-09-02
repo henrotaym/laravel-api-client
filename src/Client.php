@@ -79,7 +79,7 @@ class Client implements ClientContract
         ];
         if ($request->hasData()):
             $requestArgs[] = $request->isMultipart() ?
-                $this->multipartEncoder->format($request->data())
+                $this->multipartEncoder->format($request->data(), $client)
                 : $this->jsonEncoder->format($request->data());
         endif;
 

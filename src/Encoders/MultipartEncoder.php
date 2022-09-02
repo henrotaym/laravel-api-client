@@ -3,8 +3,11 @@ namespace Henrotaym\LaravelApiClient\Encoders;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Henrotaym\LaravelApiClient\Contracts\Encoders\MultipartEncoderContract;
+use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 use Henrotaym\LaravelApiClient\Encoders\_Private\Encoder;
 use Henrotaym\LaravelApiClient\Encoders\Traits\HasSingleValuesToFormat;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\UploadedFile;
 
 /**
  * Encoding to valid multipart data.
@@ -19,11 +22,13 @@ class MultipartEncoder implements MultipartEncoderContract
      * @param array|Arrayable $data
      * @return array
      */
-    public function format(array|Arrayable $data): array
+    public function format(array|Arrayable $data, PendingRequest &$request): array
     {
-        return $this->formatRecursively($data instanceof Arrayable ?
-            $data->toArray()
-            : $data
+        return $this->formatRecursively(
+            $data instanceof Arrayable ?
+                $data->toArray()
+                : $data,
+            $request
         );
     }
 
@@ -36,6 +41,7 @@ class MultipartEncoder implements MultipartEncoderContract
      */
     protected function formatRecursively(
         array $data,
+        PendingRequest &$request,
         string $namespace = "",
         array &$flattened = []
     ) {
@@ -48,9 +54,13 @@ class MultipartEncoder implements MultipartEncoderContract
                 $value->toArray()
                 : $value;
 
-            is_array($currentValue) ?
-                $this->formatRecursively($currentValue, $currentNamepace, $flattened)
-                : $flattened[$currentNamepace] = $this->formatSingleValue($value);
+            if (is_array($currentValue)):
+                $this->formatRecursively($currentValue, $request, $currentNamepace, $flattened);
+            elseif ($value instanceof UploadedFile):
+                $request->attach($flattened[$currentNamepace], $value->get(), $value->getClientOriginalName());
+            else:
+                $flattened[$currentNamepace] = $this->formatSingleValue($value);
+            endif;
         endforeach;
 
         return $flattened;
