@@ -57,7 +57,7 @@ class MultipartEncoder implements MultipartEncoderContract
             if (is_array($currentValue)):
                 $this->formatRecursively($currentValue, $request, $currentNamepace, $flattened);
             elseif ($value instanceof UploadedFile):
-                $request->attach($flattened[$currentNamepace], $value->get(), $value->getClientOriginalName());
+                $request->attach($currentNamepace, $value->get(), $value->getClientOriginalName());
             else:
                 $flattened[$currentNamepace] = $this->formatSingleValue($value);
             endif;
