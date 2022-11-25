@@ -80,6 +80,14 @@ interface RequestContract extends Arrayable
     public function setIsMultipart(bool $isMultipart): RequestContract;
 
     /**
+     * Setting request as raw.
+     * 
+     * @param bool $isRaw
+     * @return static
+     */
+    public function setIsRaw(bool $isRaw): RequestContract;
+
+    /**
      * Defining authorization header as basic.
      * 
      * @param string $username
@@ -171,4 +179,11 @@ interface RequestContract extends Arrayable
      * @return bool
      */
     public function isMultipart(): bool;
+
+    /**
+     * Telling if request is raw.
+     * 
+     * @return bool
+     */
+    public function isRaw(): bool;
 }

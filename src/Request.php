@@ -34,6 +34,11 @@ class Request implements RequestContract
          */
         $isMultipart = false,
         /**
+         * Request should be sent as raw data.
+         * @var bool
+         */
+        $isRaw = false,
+        /**
          * Request attachment
          * @var ?FileContract
          */
@@ -197,6 +202,19 @@ class Request implements RequestContract
     }
 
     /**
+     * Setting request as multipart.
+     * 
+     * @param bool $isRaw
+     * @return static
+     */
+    public function setIsRaw(bool $isRaw): RequestContract
+    {
+        $this->isRaw = $isRaw;
+
+        return $this;
+    }
+
+    /**
      * Defining authorization header as basic.
      * 
      * @param string $username
@@ -339,6 +357,16 @@ class Request implements RequestContract
     }
 
     /**
+     * Telling if request is raw.
+     * 
+     * @return bool
+     */
+    public function isRaw(): bool
+    {
+        return $this->isRaw;
+    }
+
+    /**
      * Get the instance as an array.
      *
      * @return array
@@ -354,6 +382,7 @@ class Request implements RequestContract
             'verb' => $this->verb(),
             'is_form' => $this->isForm(),
             'is_multipart' => $this->isMultipart(),
+            'is_raw' => $this->isRaw(),
             'has_attachment' => $this->hasAttachment()
         ];
     }

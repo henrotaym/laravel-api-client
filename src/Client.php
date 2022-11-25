@@ -74,18 +74,34 @@ class Client implements ClientContract
     {
         $client = $this->httpClient($request);
         
-        $requestArgs = [
-            $request->url()
-        ];
-        if ($request->hasData()):
-            $requestArgs[] = $request->isMultipart() ?
-                $this->multipartEncoder->format($request->data(), $client)
-                : $this->jsonEncoder->format($request->data());
-        endif;
+        $requestArgs = [$request->url()];
+        $this->handleRequestData($request, $client, $requestArgs);
 
         $response = call_user_func_array([$client, $request->verb()], $requestArgs);
 
         return $this->response($response);
+    }
+
+    /**
+     * Handling current request data.
+     * 
+     * @param RequestContract $request
+     * @param PendingRequest $client
+     * @param array $requestArgs
+     * @return void
+     */
+    protected function handleRequestData(RequestContract &$request, PendingRequest &$client, array &$requestArgs): void
+    {
+        if (!$request->hasData()) return;
+        
+        if ($request->isRaw()):
+            $client->withBody(json_encode($request->data()->all()), 'application/json');
+            return;
+        endif;
+
+        $requestArgs[] = $request->isMultipart() ?
+            $this->multipartEncoder->format($request->data(), $client)
+            : $this->jsonEncoder->format($request->data());
     }
 
     /** 
