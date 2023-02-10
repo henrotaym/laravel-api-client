@@ -4,6 +4,7 @@ namespace Henrotaym\LaravelApiClient\Tests\Unit;
 use Henrotaym\LaravelApiClient\Contracts\ClientContract;
 use Henrotaym\LaravelApiClient\Contracts\Encoders\JsonEncoderContract;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
+use Henrotaym\LaravelApiClient\Encoders\JsonEncoder;
 use Henrotaym\LaravelApiClient\Tests\TestCase;
 use Henrotaym\LaravelPackageVersioning\Testing\Traits\InstallPackageTest;
 
@@ -36,11 +37,28 @@ class ExampleTest extends TestCase
 
         $response = $client->try($request, "it failed.");
 
-        if ($response->failed()):
-            dd($response->error()->context());
-        endif;
+        $this->assertTrue(is_array($response->error()->context()));
+    }
 
+    public function test_that_formating_resource()
+    {
+        $data = ['test' => new TestResource("test")];
+        $formater = new JsonEncoder();
 
-        $this->assertTrue(true);
+        $this->assertEquals(
+            ['test' => ['hello' => 'world']],
+            $formater->format($data)
+        );
+    }
+
+    public function test_that_formating_arrayable()
+    {
+        $data = ['test' => new TestArrayable()];
+        $formater = new JsonEncoder();
+
+        $this->assertEquals(
+            ['test' => ['hello' => 'world']],
+            $formater->format($data)
+        );
     }
 }

@@ -4,6 +4,7 @@ namespace Henrotaym\LaravelApiClient\Encoders;
 use Henrotaym\LaravelApiClient\Contracts\Encoders\JsonEncoderContract;
 use Henrotaym\LaravelApiClient\Encoders\Traits\HasSingleValuesToFormat;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Encoding to valid multipart data.
@@ -20,9 +21,12 @@ class JsonEncoder implements JsonEncoderContract
      */
     public function format(array|Arrayable $data): array
     {
-        return $this->formatRecursively($data instanceof Arrayable ?
-            $data->toArray()
-            : $data
+        if ($data instanceof JsonResource) return $this->formatResource($data);
+
+        return $this->formatRecursively(
+            $data instanceof Arrayable ?
+                $data->toArray()
+                : $data
         );
     }
 
@@ -40,7 +44,11 @@ class JsonEncoder implements JsonEncoderContract
         foreach ($data as $key => $value):
             $formated[$key] = $value instanceof Arrayable ?
                 $value->toArray()
-                : $value;
+                : (
+                    $value instanceof JsonResource
+                        ? $this->formatResource($value)
+                        : $value
+                );
 
             is_array($formated[$key]) ?
                 $this->formatRecursively($formated[$key], $formated[$key])
@@ -48,5 +56,16 @@ class JsonEncoder implements JsonEncoderContract
         endforeach;
 
         return $formated;
+    }
+
+    /**
+     * Formating given json resource.
+     * 
+     * @param JsonResource $resource
+     * @return array
+     */
+    protected function formatResource(JsonResource $resource): array
+    {
+        return json_decode($resource->toJson(), true);
     }
 }
