@@ -56,6 +56,14 @@ interface RequestContract extends Arrayable
     public function setBaseUrl(string $baseUrl): RequestContract;
 
     /**
+     * Appending given url to base url.
+     * 
+     * @param string $appendedUrl Url to append.
+     * @return static
+     */
+    public function appendToBaseUrl(string $appendedUrl): RequestContract;
+    
+    /**
      * Setting url.
      * 
      * @param string url

@@ -174,6 +174,11 @@ class Request implements RequestContract
         
         return $this;
     }
+
+    public function appendToBaseUrl(string $appendedUrl): RequestContract
+    {
+        return $this->setBaseUrl("{$this->baseUrl}$appendedUrl");
+    }
     
     /**
      * Setting if request should be sent as form.
