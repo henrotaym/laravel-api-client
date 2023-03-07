@@ -16,6 +16,14 @@ interface RequestContract extends Arrayable
     public function addHeaders($headers): RequestContract;
 
     /**
+     * Setting bearer token in authorization header.
+     * 
+     * @param string $token
+     * @return static
+     */
+    public function setBearerToken(string $token): RequestContract;
+
+    /**
      * Adding query parameters.
      * 
      * @param array $query

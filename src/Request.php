@@ -226,6 +226,13 @@ class Request implements RequestContract
         $to_encode = "$username" . ($password ? ":$password" : "");
         return $this->addHeaders(['Authorization' => "Basic " . base64_encode($to_encode)]);
     }
+
+    public function setBearerToken(string $token): RequestContract
+    {
+        $authorization = "Bearer " . str_replace("Bearer ", "", $token);
+
+        return $this->addHeaders(["Authorization" => $authorization]);
+    }
     
     /**
      * Getting url.
