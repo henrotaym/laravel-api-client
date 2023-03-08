@@ -1,6 +1,7 @@
 <?php
 namespace Henrotaym\LaravelApiClient;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Henrotaym\LaravelApiClient\Contracts\FileContract;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
@@ -175,9 +176,33 @@ class Request implements RequestContract
         return $this;
     }
 
+    public function appendToUrl(string $appendedUrl): RequestContract
+    {
+        return $this->setUrl(
+            $this->concatUrls($this->url, $appendedUrl)
+        );
+    }
+
     public function appendToBaseUrl(string $appendedUrl): RequestContract
     {
-        return $this->setBaseUrl("{$this->baseUrl}$appendedUrl");
+        return $this->setBaseUrl(
+            $this->concatUrls($this->baseUrl, $appendedUrl)
+        );
+    }
+
+    /**
+     * Concatening url parts correctly.
+     * 
+     * @param ?string $url
+     * @param string $appendedUrl
+     */
+    protected function concatUrls(?string $url, string $appendedUrl): string
+    {
+        if (!$url) return $appendedUrl;
+
+        $endingWithSlash = Str::endsWith($url, "/");
+
+        return $url . $endingWithSlash ? "" : "/" . $appendedUrl;
     }
     
     /**
