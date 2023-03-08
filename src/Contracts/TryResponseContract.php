@@ -33,4 +33,11 @@ interface TryResponseContract
      * @return bool True if successful
      */
     public function ok(): bool;
+
+    /**
+     * Response body.
+     * 
+     * @return array|stdClass|null
+     */
+    public function body($asArray = false);
 }

@@ -86,4 +86,9 @@ class TryResponse implements TryResponseContract
     {
         return !$this->error && $this->response->ok();
     }
+
+    public function body($asArray = false)
+    {
+        return $this->response()?->get($asArray) ?? null;
+    }
 }
