@@ -202,7 +202,7 @@ class Request implements RequestContract
 
         $endingWithSlash = Str::endsWith($url, "/");
 
-        return $url . $endingWithSlash ? "" : "/" . $appendedUrl;
+        return $url . ($endingWithSlash ? "" : "/") . $appendedUrl;
     }
     
     /**
