@@ -3,6 +3,8 @@ namespace Henrotaym\LaravelApiClient;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Henrotaym\LaravelApiClient\Contracts\FileContract;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 
@@ -137,15 +139,12 @@ class Request implements RequestContract
     /**
      * Adding data.
      * 
-     * @param array $data
+     * @param array|Arrayable|JsonResource $data
      * @return static
      */
     public function addData($data): RequestContract
     {
-        $this->data = $this->data->merge( is_array($data) 
-            ? $data 
-            : $data->toArray()
-        );
+        $this->data = $this->data->merge($this->getFormatedData($data));
         
         return $this;
     }
@@ -203,6 +202,21 @@ class Request implements RequestContract
         $endingWithSlash = Str::endsWith($url, "/");
 
         return $url . ($endingWithSlash ? "" : "/") . $appendedUrl;
+    }
+
+    /**
+     * Getting formated data for addData method.
+     * 
+     * @param array|Arrayable|JsonResource $data
+     * @return array
+     */
+    protected function getFormatedData($data): array
+    {
+        if (is_array($data)) return $data;
+        if ($data instanceof Arrayable) return $data->toArray();
+        if ($data instanceof JsonResource) return $data->toArray(request());
+
+        return [];
     }
     
     /**
