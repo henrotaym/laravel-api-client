@@ -21,6 +21,13 @@ interface ResponseContract extends Arrayable
      */
     public function get(bool $as_array = false);
 
+    /**
+     * Getting response status code.
+     * 
+     * @return int
+     */
+    public function getStatusCode(): int;
+
     /** 
      * Getting underlying response
      * 

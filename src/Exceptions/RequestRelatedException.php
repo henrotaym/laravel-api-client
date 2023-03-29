@@ -76,6 +76,46 @@ class RequestRelatedException extends Exception
     }
 
     /**
+     * Getting related response if any.
+     * 
+     * @return ?ResponseContract
+     */
+    public function getResponse(): ?ResponseContract
+    {
+        return $this->response;
+    }
+
+    /**
+     * Getting related error if any.
+     * 
+     * @return ?Throwable
+     */
+    public function getError(): ?Throwable
+    {
+        return $this->error;
+    }
+
+    /**
+     * Telling if related to any error.
+     * 
+     * @return bool
+     */
+    public function hasError(): bool
+    {
+        return !!$this->error;
+    }
+
+    /**
+     * Telling if related to any response.
+     * 
+     * @return bool
+     */
+    public function hasResponse(): bool
+    {
+        return !!$this->response;
+    }
+
+    /**
      * Exception context to log with.
      */
     public function context()

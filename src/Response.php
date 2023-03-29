@@ -62,6 +62,11 @@ class Response implements ResponseContract
         return $body;
     }
 
+    public function getStatusCode(): int
+    {
+        return $this->response->status();
+    }
+
     /**
      * Get the instance as an array.
      *
@@ -71,7 +76,8 @@ class Response implements ResponseContract
     {
         return [
             "ok" => $this->ok(),
-            "body" => $this->get(true)
+            "body" => $this->get(true),
+            "status_code" => $this->getStatusCode()
         ];
     }
 }
