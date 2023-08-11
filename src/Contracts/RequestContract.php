@@ -119,6 +119,14 @@ interface RequestContract extends Arrayable
      * @return static
      */
     public function setBasicAuth(string $username, string $password = ""): RequestContract;
+
+    /**
+     * Setting url.
+     * 
+     * @param string url
+     * @return static
+     */
+    public function setTimeout(int $durationInSeconds): RequestContract;
     
     /**
      * Getting url.
@@ -161,6 +169,13 @@ interface RequestContract extends Arrayable
      * @return FileContract|null
      */
     public function attachment(): ?FileContract;
+
+    /**
+     * Getting request timeout duration in seconds.
+     * 
+     * @return int
+     */
+    public function timeout(): ?int;
 
     /**
      * Telling if request is having attachment.
@@ -210,4 +225,11 @@ interface RequestContract extends Arrayable
      * @return bool
      */
     public function isRaw(): bool;
+
+    /**
+     * Telling if request is having a timeout parameter.
+     * 
+     * @return bool
+     */
+    public function hasTimeout(): bool;
 }

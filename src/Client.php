@@ -180,6 +180,10 @@ class Client implements ClientContract
             $client->attach($request->attachment()->streamName(), $request->attachment()->stream());
         endif;
 
+        if ($request->hasTimeout()):
+            $client->timeout($request->timeout());
+        endif;
+
         return $client;
     }
 

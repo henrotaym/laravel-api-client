@@ -60,7 +60,12 @@ class Request implements RequestContract
          * Request verb("GET", "POST",...)
          * @var string
          */
-        $verb = "GET"
+        $verb = "GET",
+        /**
+         * Request timeout in seconds
+         * @var ?string
+         */
+        $timeoutDuration = null
     ;
 
     /**
@@ -278,6 +283,13 @@ class Request implements RequestContract
         return $this->addHeaders(["Authorization" => $authorization]);
     }
     
+    public function setTimeout(int $durationInSeconds): RequestContract
+    {
+        $this->timeoutDuration = $durationInSeconds;
+
+        return $this;
+    }
+    
     /**
      * Getting url.
      * 
@@ -343,6 +355,11 @@ class Request implements RequestContract
     public function attachment(): ?FileContract
     {
         return $this->attachment;
+    }
+
+    public function timeout(): ?int
+    {
+        return $this->timeoutDuration;
     }
 
     /**
@@ -417,6 +434,11 @@ class Request implements RequestContract
         return $this->isRaw;
     }
 
+    public function hasTimeout(): bool
+    {
+        return !!$this->timeoutDuration;
+    }
+
     /**
      * Get the instance as an array.
      *
@@ -427,6 +449,7 @@ class Request implements RequestContract
         return [
             'base_url' => $this->baseUrl(),
             'url' => $this->url(),
+            'timeout' => $this->timeout(),
             'headers' => $this->headers()->toArray(),
             'data' => $this->data()->toArray(),
             'query' => $this->query->toArray(),
