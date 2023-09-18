@@ -1,6 +1,7 @@
 <?php
 namespace Henrotaym\LaravelApiClient;
 
+use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Support\Arrayable;
@@ -26,6 +27,11 @@ class Request implements RequestContract
          * @var Collection
          */
         $data,
+        /**
+         * Request options
+         * @var Collection
+         */
+        $options,
         /**
          * Request should be sent as form data
          * @var bool
@@ -73,6 +79,7 @@ class Request implements RequestContract
         $this->query = collect();
         $this->data = collect();
         $this->headers = collect();
+        $this->options = collect();
     }
 
     /**
@@ -277,6 +284,42 @@ class Request implements RequestContract
 
         return $this->addHeaders(["Authorization" => $authorization]);
     }
+
+    public function setCertificate(string $path, ?string $passphrase = null): RequestContract
+    {
+        $value = $this->getFormatedKeyOrCertificate($path, $passphrase);
+
+        return $this->addOptions([RequestOptions::CERT => $value]);
+    }
+
+    public function setKey(string $path, ?string $passphrase = null): RequestContract
+    {
+        $value = $this->getFormatedKeyOrCertificate($path, $passphrase);
+
+        return $this->addOptions([RequestOptions::SSL_KEY => $value]);
+    }
+
+    public function addOptions($options): RequestContract
+    {
+        $this->options = $this->options->merge( 
+            is_array($options)
+                ? $options 
+                : $options->toArray()
+        );
+    
+        return $this;
+    }
+
+
+    /**
+     * @return string|array
+     */
+    protected function getFormatedKeyOrCertificate(string $path, ?string $passphrase = null)
+    {
+        return $passphrase
+            ? [$path, $passphrase]
+            : $path;
+    }
     
     /**
      * Getting url.
@@ -417,6 +460,11 @@ class Request implements RequestContract
         return $this->isRaw;
     }
 
+    public function getOptions(): Collection
+    {
+        return $this->options;
+    }
+
     /**
      * Get the instance as an array.
      *
@@ -434,7 +482,8 @@ class Request implements RequestContract
             'is_form' => $this->isForm(),
             'is_multipart' => $this->isMultipart(),
             'is_raw' => $this->isRaw(),
-            'has_attachment' => $this->hasAttachment()
+            'has_attachment' => $this->hasAttachment(),
+            'options' => $this->options->toArray()
         ];
     }
     

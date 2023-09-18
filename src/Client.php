@@ -149,10 +149,11 @@ class Client implements ClientContract
         if ($this->credential):
             $this->credential->prepare($request);
         endif;
-        
-        $options = config('app.env') === 'local'
-            ? ['verify' => false]
-            : [];
+
+        $options = $request->getOptions()->toArray();
+        $isLocal = config('app.env') === 'local';
+
+        if ($isLocal) $options['verify'] = false;
 
         if ($request->hasBaseUrl()):
             // Appending slash if base_url doesn't end with it

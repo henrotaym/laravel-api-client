@@ -5,6 +5,7 @@ use Henrotaym\LaravelApiClient\Contracts\ClientContract;
 use Henrotaym\LaravelApiClient\Contracts\Encoders\JsonEncoderContract;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 use Henrotaym\LaravelApiClient\Encoders\JsonEncoder;
+use Henrotaym\LaravelApiClient\Request;
 use Henrotaym\LaravelApiClient\Tests\TestCase;
 use Henrotaym\LaravelPackageVersioning\Testing\Traits\InstallPackageTest;
 
@@ -59,6 +60,35 @@ class ExampleTest extends TestCase
         $this->assertEquals(
             ['test' => ['hello' => 'world']],
             $formater->format($data)
+        );
+    }
+
+    public function test_that_setting_certificate()
+    {
+        $path = "test/certificate.pem";
+        $passphrase = "password";
+        $request = new Request();
+        $request->setCertificate($path, $passphrase);
+
+        $this->assertEquals(
+            [
+                "cert" => [$path, $passphrase]
+            ],
+            $request->getOptions()->toArray()
+        );
+    }
+
+    public function test_that_setting_key()
+    {
+        $path = "test/private_key.pem";
+        $request = new Request();
+        $request->setKey($path);
+
+        $this->assertEquals(
+            [
+                "ssl_key" => $path
+            ],
+            $request->getOptions()->toArray()
         );
     }
 }

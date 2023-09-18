@@ -4,6 +4,7 @@ namespace Henrotaym\LaravelApiClient\Contracts;
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Support\Arrayable;
 use Henrotaym\LaravelApiClient\Contracts\FileContract;
+use Illuminate\Support\Arr;
 
 interface RequestContract extends Arrayable
 {
@@ -119,6 +120,32 @@ interface RequestContract extends Arrayable
      * @return static
      */
     public function setBasicAuth(string $username, string $password = ""): RequestContract;
+
+    /**
+     * Setting certificate to send with request.
+     * 
+     * @param string $pathToCerficateFile
+     * @param ?string $passphrase
+     * @return static
+     */
+    public function setCertificate(string $pathToCerficateFile, ?string $passphrase = null): RequestContract;
+
+    /**
+     * Setting ssl key to send with request.
+     * 
+     * @param string $pathToKeyFile
+     * @param ?string $passphrase
+     * @return static
+     */
+    public function setKey(string $pathToKeyFile, ?string $passphrase = null): RequestContract;
+
+    /**
+     * Adding options to request.
+     * 
+     * @param array|Arrayable $options
+     * @return static
+     */
+    public function addOptions($options): RequestContract;
     
     /**
      * Getting url.
@@ -210,4 +237,11 @@ interface RequestContract extends Arrayable
      * @return bool
      */
     public function isRaw(): bool;
+
+    /**
+     * Getting request options.
+     * 
+     * @return Collection
+     */
+    public function getOptions(): Collection;
 }
