@@ -146,6 +146,14 @@ interface RequestContract extends Arrayable
      * @return static
      */
     public function addOptions($options): RequestContract;
+
+    /**
+     * Setting url.
+     * 
+     * @param string url
+     * @return static
+     */
+    public function setTimeout(int $durationInSeconds): RequestContract;
     
     /**
      * Getting url.
@@ -188,6 +196,13 @@ interface RequestContract extends Arrayable
      * @return FileContract|null
      */
     public function attachment(): ?FileContract;
+
+    /**
+     * Getting request timeout duration in seconds.
+     * 
+     * @return int
+     */
+    public function timeout(): ?int;
 
     /**
      * Telling if request is having attachment.
@@ -244,4 +259,11 @@ interface RequestContract extends Arrayable
      * @return Collection
      */
     public function getOptions(): Collection;
+    
+    /**
+     * Telling if request is having a timeout parameter.
+     * 
+     * @return bool
+     */
+    public function hasTimeout(): bool;
 }
