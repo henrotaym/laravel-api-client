@@ -91,4 +91,47 @@ class ExampleTest extends TestCase
             $request->getOptions()->toArray()
         );
     }
+
+    public function test_that_getting_query()
+    {
+        $query = ["hello" => "nice"];
+        $request = new Request();
+
+        $request->addQuery($query);
+
+        $this->assertEquals(
+            $query,
+            $request->query()->all()
+        );
+    }
+
+    public function test_that_getting_query_less_url()
+    {
+        $query = ["hello" => "nice"];
+        $url = "/test/nice";
+        $request = new Request();
+
+        $request->setUrl($url)
+            ->addQuery($query);
+
+        $this->assertEquals(
+            $url,
+            $request->queryLessUrl()
+        );
+    }
+
+    public function test_that_getting_query_less_url_if_url_contains_parameters()
+    {
+        $query = ["hello" => "nice"];
+        $url = "/test/nice";
+        $request = new Request();
+
+        $request->setUrl("$url?test=false")
+            ->addQuery($query);
+
+        $this->assertEquals(
+            $url,
+            $request->queryLessUrl()
+        );
+    }
 }

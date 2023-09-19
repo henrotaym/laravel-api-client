@@ -163,6 +163,13 @@ interface RequestContract extends Arrayable
     public function url(): string;
 
     /**
+     * Getting query less url.
+     * 
+     * @return string
+     */
+    public function queryLessUrl(): string;
+
+    /**
      * Getting verb.
      * 
      * @return string
@@ -203,6 +210,13 @@ interface RequestContract extends Arrayable
      * @return int
      */
     public function timeout(): ?int;
+
+    /**
+     * Getting query.
+     * 
+     * @return Collection
+     */
+    public function query(): Collection;
 
     /**
      * Telling if request is having attachment.

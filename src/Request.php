@@ -350,6 +350,11 @@ class Request implements RequestContract
         return $this->url . ($has_query ? "&" : "?") . $query;
     }
 
+    public function queryLessUrl(): string
+    {
+        return Str::before($this->url, "?");
+    }
+
     /**
      * Getting verb.
      * 
@@ -403,6 +408,11 @@ class Request implements RequestContract
     public function timeout(): ?int
     {
         return $this->timeoutDuration;
+    }
+
+    public function query(): Collection
+    {
+        return $this->query;
     }
 
     /**
