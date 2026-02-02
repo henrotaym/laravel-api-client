@@ -1,4 +1,5 @@
 <?php
+
 namespace Henrotaym\LaravelApiClient\Tests;
 
 use Henrotaym\LaravelApiClient\Package;
@@ -11,11 +12,11 @@ class TestCase extends VersionablePackageTestCase
     {
         return Package::class;
     }
-    
+
     public function getServiceProviders(): array
     {
         return [
-            ClientServiceProvider::class
+            ClientServiceProvider::class,
         ];
     }
 }

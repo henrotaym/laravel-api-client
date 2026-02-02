@@ -1,4 +1,5 @@
 <?php
+
 namespace Henrotaym\LaravelApiClient\Encoders;
 
 use Henrotaym\LaravelApiClient\Contracts\Encoders\JsonEncoderContract;
@@ -15,33 +16,34 @@ class JsonEncoder implements JsonEncoderContract
 
     /**
      * Format given data.
-     * 
-     * @param array|Arrayable $data
-     * @return array
      */
-    public function format(array|Arrayable $data): array
+    public function format(array|Arrayable $data, bool $booleanAsBinary): array
     {
-        if ($data instanceof JsonResource) return $this->formatResource($data);
+        if ($data instanceof JsonResource) {
+            return $this->formatResource($data);
+        }
 
         return $this->formatRecursively(
             $data instanceof Arrayable ?
                 $data->toArray()
-                : $data
+                : $data,
+            $booleanAsBinary
         );
     }
 
     /**
      * format recursively given data.
-     * 
-     * @param array $data Data to format
-     * @param string $namespace Current namespace (should not be given)
-     * @param array $formated Current formated representation (should not be given)
+     *
+     * @param  array  $data  Data to format
+     * @param  string  $namespace  Current namespace (should not be given)
+     * @param  array  $formated  Current formated representation (should not be given)
      */
     protected function formatRecursively(
         array $data,
-        array &$formated = []
+        bool $booleanAsBinary,
+        array &$formated = [],
     ) {
-        foreach ($data as $key => $value):
+        foreach ($data as $key => $value) {
             $formated[$key] = $value instanceof Arrayable ?
                 $value->toArray()
                 : (
@@ -51,18 +53,15 @@ class JsonEncoder implements JsonEncoderContract
                 );
 
             is_array($formated[$key]) ?
-                $this->formatRecursively($formated[$key], $formated[$key])
-                : $formated[$key] = $this->formatSingleValue($formated[$key]);
-        endforeach;
+                $this->formatRecursively($formated[$key], $booleanAsBinary, $formated[$key])
+                : $formated[$key] = $this->formatSingleValue($formated[$key], $booleanAsBinary);
+        }
 
         return $formated;
     }
 
     /**
      * Formating given json resource.
-     * 
-     * @param JsonResource $resource
-     * @return array
      */
     protected function formatResource(JsonResource $resource): array
     {

@@ -1,82 +1,111 @@
 <?php
+
 namespace Henrotaym\LaravelApiClient;
 
 use GuzzleHttp\RequestOptions;
-use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Henrotaym\LaravelApiClient\Contracts\FileContract;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class Request implements RequestContract
 {
-    protected
-        /**
-         * Request GET data
-         * @var Collection
-         */
-        $query,
-        /**
-         * Request headers
-         * @var Collection
-         */
-        $headers,
-        /**
-         * Request POST data
-         * @var Collection
-         */
-        $data,
-        /**
-         * Request options
-         * @var Collection
-         */
-        $options,
-        /**
-         * Request should be sent as form data
-         * @var bool
-         */
-        $isForm = false,
-        /**
-         * Request should be sent as multi-part form data.
-         * @var bool
-         */
-        $isMultipart = false,
-        /**
-         * Request should be sent as raw data.
-         * @var bool
-         */
-        $isRaw = false,
-        /**
-         * Request attachment
-         * @var ?FileContract
-         */
-        $attachment,
-        /**
-         * Request URL
-         * @var string
-         */
-        $url,
-        /**
-         * Request base url
-         * @var string
-         */
-        $baseUrl,
-        /**
-         * Request verb("GET", "POST",...)
-         * @var string
-         */
-        $verb = "GET",
-        /**
-         * Request timeout in seconds
-         * @var ?string
-         */
-        $timeoutDuration = null
-    ;
+    /**
+     * Request GET data
+     *
+     * @var Collection
+     */
+    protected $query;
+
+    /**
+     * Request headers
+     *
+     * @var Collection
+     */
+    protected $headers;
+
+    /**
+     * Request POST data
+     *
+     * @var Collection
+     */
+    protected $data;
+
+    /**
+     * Request options
+     *
+     * @var Collection
+     */
+    protected $options;
+
+    /**
+     * Request should be sent as form data
+     *
+     * @var bool
+     */
+    protected $isForm = false;
+
+    /**
+     * Request should be sent as multi-part form data.
+     *
+     * @var bool
+     */
+    protected $isMultipart = false;
+
+    /**
+     * Request should be sent as raw data.
+     *
+     * @var bool
+     */
+    protected $isRaw = false;
+
+    /**
+     * Request attachment
+     *
+     * @var ?FileContract
+     */
+    protected $attachment;
+
+    /**
+     * Request URL
+     *
+     * @var string
+     */
+    protected $url;
+
+    /**
+     * Request base url
+     *
+     * @var string
+     */
+    protected $baseUrl;
+
+    /**
+     * Request verb("GET", "POST",...)
+     *
+     * @var string
+     */
+    protected $verb = 'GET';
+
+    /**
+     * Request timeout in seconds
+     *
+     * @var ?string
+     */
+    protected $timeoutDuration = null;
+
+    /**
+     * Boolean as binary (0 / 1) transformation.
+     *
+     * @var bool
+     */
+    protected $booleanAsBinary = true;
 
     /**
      * Constructing instance.
-     * 
+     *
      * @return void
      */
     public function __construct()
@@ -89,101 +118,101 @@ class Request implements RequestContract
 
     /**
      * Setting verb.
-     * 
+     *
      * @param string verb
      * @return static
      */
     public function setVerb(string $verb): RequestContract
     {
         $this->verb = strtoupper($verb);
-        
+
         return $this;
     }
 
     /**
      * Setting url.
-     * 
+     *
      * @param string url
      * @return static
      */
     public function setUrl(string $url): RequestContract
     {
         $this->url = $url;
-        
+
         return $this;
     }
 
     /**
      * Adding headers.
-     * 
-     * @param array $headers
+     *
+     * @param  array  $headers
      * @return static
      */
     public function addHeaders($headers): RequestContract
     {
-        $this->headers = $this->headers->merge( 
-            is_array($headers) 
-                ? $headers 
+        $this->headers = $this->headers->merge(
+            is_array($headers)
+                ? $headers
                 : $headers->toArray()
         );
-    
+
         return $this;
     }
 
     /**
      * Adding query parameters.
-     * 
-     * @param array $query
+     *
+     * @param  array  $query
      * @return static
      */
     public function addQuery($query): RequestContract
     {
         $this->query = $this->query
-            ->merge( 
-                is_array($query) 
-                    ? $query 
+            ->merge(
+                is_array($query)
+                    ? $query
                     : $query->toArray()
             );
-        
+
         return $this;
     }
 
     /**
      * Adding data.
-     * 
-     * @param array|Arrayable|JsonResource $data
+     *
+     * @param  array|Arrayable|JsonResource  $data
      * @return static
      */
     public function addData($data): RequestContract
     {
         $this->data = $this->data->merge($this->getFormatedData($data));
-        
+
         return $this;
     }
 
     /**
      * Setting attachment.
-     * 
+     *
      * @param FileContract file
      * @return static
      */
     public function setAttachment(FileContract $file): RequestContract
     {
         $this->attachment = $file;
-        
+
         return $this;
     }
 
     /**
      * Setting base url.
-     * 
+     *
      * @param string baseUrl
      * @return static
      */
     public function setBaseUrl(string $baseUrl): RequestContract
     {
         $this->baseUrl = $baseUrl;
-        
+
         return $this;
     }
 
@@ -203,51 +232,54 @@ class Request implements RequestContract
 
     /**
      * Concatening url parts correctly.
-     * 
-     * @param ?string $url
-     * @param string $appendedUrl
      */
     protected function concatUrls(?string $url, string $appendedUrl): string
     {
-        if (!$url) return $appendedUrl;
+        if (! $url) {
+            return $appendedUrl;
+        }
 
-        $endingWithSlash = Str::endsWith($url, "/");
+        $endingWithSlash = Str::endsWith($url, '/');
 
-        return $url . ($endingWithSlash ? "" : "/") . $appendedUrl;
+        return $url.($endingWithSlash ? '' : '/').$appendedUrl;
     }
 
     /**
      * Getting formated data for addData method.
-     * 
-     * @param array|Arrayable|JsonResource $data
-     * @return array
+     *
+     * @param  array|Arrayable|JsonResource  $data
      */
     protected function getFormatedData($data): array
     {
-        if (is_array($data)) return $data;
-        if ($data instanceof Arrayable) return $data->toArray();
-        if ($data instanceof JsonResource) return $data->toArray(request());
+        if (is_array($data)) {
+            return $data;
+        }
+        if ($data instanceof Arrayable) {
+            return $data->toArray();
+        }
+        if ($data instanceof JsonResource) {
+            return $data->toArray(request());
+        }
 
         return [];
     }
-    
+
     /**
      * Setting if request should be sent as form.
-     * 
+     *
      * @param bool isForm
      * @return static
      */
     public function setIsForm(bool $isForm): RequestContract
     {
         $this->isForm = $isForm;
-        
+
         return $this;
     }
 
     /**
      * Setting request as multipart.
-     * 
-     * @param bool $isMultipart
+     *
      * @return static
      */
     public function setIsMultipart(bool $isMultipart): RequestContract
@@ -259,8 +291,7 @@ class Request implements RequestContract
 
     /**
      * Setting request as multipart.
-     * 
-     * @param bool $isRaw
+     *
      * @return static
      */
     public function setIsRaw(bool $isRaw): RequestContract
@@ -272,22 +303,21 @@ class Request implements RequestContract
 
     /**
      * Defining authorization header as basic.
-     * 
-     * @param string $username
-     * @param string $password
+     *
      * @return static
      */
-    public function setBasicAuth(string $username, string $password = ""): RequestContract
+    public function setBasicAuth(string $username, string $password = ''): RequestContract
     {
-        $to_encode = "$username" . ($password ? ":$password" : "");
-        return $this->addHeaders(['Authorization' => "Basic " . base64_encode($to_encode)]);
+        $to_encode = "$username".($password ? ":$password" : '');
+
+        return $this->addHeaders(['Authorization' => 'Basic '.base64_encode($to_encode)]);
     }
 
     public function setBearerToken(string $token): RequestContract
     {
-        $authorization = "Bearer " . str_replace("Bearer ", "", $token);
+        $authorization = 'Bearer '.str_replace('Bearer ', '', $token);
 
-        return $this->addHeaders(["Authorization" => $authorization]);
+        return $this->addHeaders(['Authorization' => $authorization]);
     }
 
     public function setCertificate(string $path, ?string $passphrase = null): RequestContract
@@ -306,15 +336,14 @@ class Request implements RequestContract
 
     public function addOptions($options): RequestContract
     {
-        $this->options = $this->options->merge( 
+        $this->options = $this->options->merge(
             is_array($options)
-                ? $options 
+                ? $options
                 : $options->toArray()
         );
-    
+
         return $this;
     }
-
 
     /**
      * @return string|array
@@ -325,40 +354,43 @@ class Request implements RequestContract
             ? [$path, $passphrase]
             : $path;
     }
-    
+
     public function setTimeout(int $durationInSeconds): RequestContract
     {
         $this->timeoutDuration = $durationInSeconds;
 
         return $this;
     }
-    
+
+    public function setBooleanAsBinary(bool $booleanAsBinary): RequestContract
+    {
+        $this->booleanAsBinary = $booleanAsBinary;
+
+        return $this;
+    }
+
     /**
      * Getting url.
-     * 
-     * @return string
      */
     public function url(): string
     {
-        if ($this->query->isEmpty()):
+        if ($this->query->isEmpty()) {
             return $this->url;
-        endif;
-        
+        }
+
         $has_query = strpos($this->url, '?') !== false;
         $query = http_build_query($this->query->all());
 
-        return $this->url . ($has_query ? "&" : "?") . $query;
+        return $this->url.($has_query ? '&' : '?').$query;
     }
 
     public function queryLessUrl(): string
     {
-        return Str::before($this->url, "?");
+        return Str::before($this->url, '?');
     }
 
     /**
      * Getting verb.
-     * 
-     * @return string
      */
     public function verb(): string
     {
@@ -367,8 +399,6 @@ class Request implements RequestContract
 
     /**
      * Getting base url.
-     * 
-     * @return string|null
      */
     public function baseUrl(): ?string
     {
@@ -377,8 +407,6 @@ class Request implements RequestContract
 
     /**
      * Getting data.
-     * 
-     * @return Collection
      */
     public function data(): Collection
     {
@@ -387,8 +415,6 @@ class Request implements RequestContract
 
     /**
      * Getting headers.
-     * 
-     * @return Collection
      */
     public function headers(): Collection
     {
@@ -397,8 +423,6 @@ class Request implements RequestContract
 
     /**
      * Getting attachment.
-     * 
-     * @return FileContract|null
      */
     public function attachment(): ?FileContract
     {
@@ -417,8 +441,6 @@ class Request implements RequestContract
 
     /**
      * Telling if request is having attachment.
-     * 
-     * @return bool
      */
     public function hasAttachment(): bool
     {
@@ -427,8 +449,6 @@ class Request implements RequestContract
 
     /**
      * Telling if request is having headers.
-     * 
-     * @return bool
      */
     public function hasHeaders(): bool
     {
@@ -437,19 +457,15 @@ class Request implements RequestContract
 
     /**
      * Telling if request is having base url.
-     * 
-     * @return bool
      */
     public function hasBaseUrl(): bool
     {
-        return is_string($this->baseUrl) 
+        return is_string($this->baseUrl)
             && strlen($this->baseUrl) > 0;
     }
 
     /**
      * Telling if request is having data.
-     * 
-     * @return bool
      */
     public function hasData(): bool
     {
@@ -459,8 +475,6 @@ class Request implements RequestContract
 
     /**
      * Telling if request is a form.
-     * 
-     * @return bool
      */
     public function isForm(): bool
     {
@@ -469,8 +483,6 @@ class Request implements RequestContract
 
     /**
      * Telling if request is multipart.
-     * 
-     * @return bool
      */
     public function isMultipart(): bool
     {
@@ -479,8 +491,6 @@ class Request implements RequestContract
 
     /**
      * Telling if request is raw.
-     * 
-     * @return bool
      */
     public function isRaw(): bool
     {
@@ -491,10 +501,15 @@ class Request implements RequestContract
     {
         return $this->options;
     }
-    
+
     public function hasTimeout(): bool
     {
-        return !!$this->timeoutDuration;
+        return (bool) $this->timeoutDuration;
+    }
+
+    public function hasBooleanAsBinary(): bool
+    {
+        return $this->booleanAsBinary;
     }
 
     /**
@@ -516,8 +531,8 @@ class Request implements RequestContract
             'is_multipart' => $this->isMultipart(),
             'is_raw' => $this->isRaw(),
             'has_attachment' => $this->hasAttachment(),
-            'options' => $this->options->toArray()
+            'options' => $this->options->toArray(),
+            'has_boolean_as_binary' => $this->hasBooleanAsBinary(),
         ];
     }
-    
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Henrotaym\LaravelApiClient\Facades;
 
 use Henrotaym\LaravelApiClient\Package as Underlying;

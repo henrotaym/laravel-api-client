@@ -1,4 +1,5 @@
 <?php
+
 namespace Henrotaym\LaravelApiClient;
 
 use Henrotaym\LaravelApiClient\Contracts\ResponseContract;
@@ -9,21 +10,21 @@ class TryResponse implements TryResponseContract
 {
     /**
      * Error after trying the request.
-     * 
+     *
      * @var RequestRelatedException|null
      */
     protected $error;
 
     /**
      * Response after trying request.
-     * 
+     *
      * @return ResponseContract|null
      */
     protected $response;
 
     /**
      * Error after trying the request.
-     * 
+     *
      * @return RequestRelatedException|null Null if there is no exception.
      */
     public function error(): ?RequestRelatedException
@@ -33,9 +34,6 @@ class TryResponse implements TryResponseContract
 
     /**
      * Setting up error.
-     * 
-     * @param RequestRelatedException $error
-     * @return TryResponseContract
      */
     public function setError(RequestRelatedException $error): TryResponseContract
     {
@@ -46,7 +44,7 @@ class TryResponse implements TryResponseContract
 
     /**
      * Response after trying the request.
-     * 
+     *
      * @return ResponseContract|null Null if there is no response.
      */
     public function response(): ?ResponseContract
@@ -56,9 +54,6 @@ class TryResponse implements TryResponseContract
 
     /**
      * Setting up response.
-     * 
-     * @param ResponseContract $response
-     * @return TryResponseContract
      */
     public function setResponse(ResponseContract $response): TryResponseContract
     {
@@ -69,22 +64,22 @@ class TryResponse implements TryResponseContract
 
     /**
      * Telling if request failed.
-     * 
+     *
      * @return bool True if failed.
      */
     public function failed(): bool
     {
-        return !$this->ok();
+        return ! $this->ok();
     }
 
     /**
      * Telling if request was ok.
-     * 
+     *
      * @return bool True if successful
      */
     public function ok(): bool
     {
-        return !$this->error && $this->response->ok();
+        return ! $this->error && $this->response->ok();
     }
 
     public function body($asArray = false)

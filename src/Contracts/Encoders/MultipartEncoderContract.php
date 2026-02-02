@@ -1,4 +1,5 @@
 <?php
+
 namespace Henrotaym\LaravelApiClient\Contracts\Encoders;
 
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
@@ -12,10 +13,8 @@ interface MultipartEncoderContract
 {
     /**
      * Format given data.
-     * 
-     * @param array|Arrayable $data
-     * @param RequestContract $request Related request (We might need it to attach files)
-     * @return array
+     *
+     * @param  RequestContract  $request  Related request (We might need it to attach files)
      */
-    public function format(array|Arrayable $data, PendingRequest &$request): array;
+    public function format(array|Arrayable $data, PendingRequest &$request, bool $booleanAsBinary): array;
 }

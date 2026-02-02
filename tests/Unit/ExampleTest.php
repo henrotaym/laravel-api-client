@@ -1,8 +1,8 @@
 <?php
+
 namespace Henrotaym\LaravelApiClient\Tests\Unit;
 
 use Henrotaym\LaravelApiClient\Contracts\ClientContract;
-use Henrotaym\LaravelApiClient\Contracts\Encoders\JsonEncoderContract;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 use Henrotaym\LaravelApiClient\Encoders\JsonEncoder;
 use Henrotaym\LaravelApiClient\Request;
@@ -24,55 +24,79 @@ class ExampleTest extends TestCase
         $request = $this->app->make(RequestContract::class);
 
         $request->addData([
-            'hello' => "coucou",
+            'hello' => 'coucou',
             'salam' => [
                 [
-                    'resource' => "string",
-                    'name' => "testastos"
-                ]
-            ]
+                    'resource' => 'string',
+                    'name' => 'testastos',
+                    'bool' => true,
+                ],
+            ],
         ])
-        ->setVerb('post')
-        ->setIsMultipart(true)
-        ->setUrl('https://laramara.com');
+            ->setVerb('post')
+            ->setIsMultipart(true)
+            ->setUrl('https://laramara.com')
+            ->setBooleanAsBinary(false);
 
-        $response = $client->try($request, "it failed.");
+        $response = $client->try($request, 'it failed.');
 
         $this->assertTrue(is_array($response->error()->context()));
     }
 
     public function test_that_formating_resource()
     {
-        $data = ['test' => new TestResource("test")];
-        $formater = new JsonEncoder();
+        $data = ['test' => new TestResource('test')];
+        $formater = new JsonEncoder;
 
         $this->assertEquals(
             ['test' => ['hello' => 'world']],
-            $formater->format($data)
+            $formater->format($data, true)
         );
     }
 
     public function test_that_formating_arrayable()
     {
-        $data = ['test' => new TestArrayable()];
-        $formater = new JsonEncoder();
+        $data = ['test' => new TestArrayable];
+        $formater = new JsonEncoder;
 
         $this->assertEquals(
             ['test' => ['hello' => 'world']],
-            $formater->format($data)
+            $formater->format($data, true)
+        );
+    }
+
+    public function test_that_formating_boolean_as_binary()
+    {
+        $data = ['test' => true];
+        $formater = new JsonEncoder;
+
+        $this->assertEquals(
+            ['test' => 1],
+            $formater->format($data, true)
+        );
+    }
+
+    public function test_that_not_formating_boolean_as_binary()
+    {
+        $data = ['test' => true];
+        $formater = new JsonEncoder;
+
+        $this->assertEquals(
+            $data,
+            $formater->format($data, false)
         );
     }
 
     public function test_that_setting_certificate()
     {
-        $path = "test/certificate.pem";
-        $passphrase = "password";
-        $request = new Request();
+        $path = 'test/certificate.pem';
+        $passphrase = 'password';
+        $request = new Request;
         $request->setCertificate($path, $passphrase);
 
         $this->assertEquals(
             [
-                "cert" => [$path, $passphrase]
+                'cert' => [$path, $passphrase],
             ],
             $request->getOptions()->toArray()
         );
@@ -80,13 +104,13 @@ class ExampleTest extends TestCase
 
     public function test_that_setting_key()
     {
-        $path = "test/private_key.pem";
-        $request = new Request();
+        $path = 'test/private_key.pem';
+        $request = new Request;
         $request->setKey($path);
 
         $this->assertEquals(
             [
-                "ssl_key" => $path
+                'ssl_key' => $path,
             ],
             $request->getOptions()->toArray()
         );
@@ -94,8 +118,8 @@ class ExampleTest extends TestCase
 
     public function test_that_getting_query()
     {
-        $query = ["hello" => "nice"];
-        $request = new Request();
+        $query = ['hello' => 'nice'];
+        $request = new Request;
 
         $request->addQuery($query);
 
@@ -107,9 +131,9 @@ class ExampleTest extends TestCase
 
     public function test_that_getting_query_less_url()
     {
-        $query = ["hello" => "nice"];
-        $url = "/test/nice";
-        $request = new Request();
+        $query = ['hello' => 'nice'];
+        $url = '/test/nice';
+        $request = new Request;
 
         $request->setUrl($url)
             ->addQuery($query);
@@ -122,9 +146,9 @@ class ExampleTest extends TestCase
 
     public function test_that_getting_query_less_url_if_url_contains_parameters()
     {
-        $query = ["hello" => "nice"];
-        $url = "/test/nice";
-        $request = new Request();
+        $query = ['hello' => 'nice'];
+        $url = '/test/nice';
+        $request = new Request;
 
         $request->setUrl("$url?test=false")
             ->addQuery($query);

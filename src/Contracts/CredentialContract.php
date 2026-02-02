@@ -1,14 +1,12 @@
 <?php
-namespace Henrotaym\LaravelApiClient\Contracts;
 
-use Henrotaym\LaravelApiClient\Contracts\RequestContract;
+namespace Henrotaym\LaravelApiClient\Contracts;
 
 interface CredentialContract
 {
     /**
      * Preparing request.
-     * 
-     * @param RequestContract $request
+     *
      * @return void
      */
     public function prepare(RequestContract &$request);

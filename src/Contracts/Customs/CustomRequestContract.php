@@ -1,4 +1,5 @@
 <?php
+
 namespace Henrotaym\LaravelApiClient\Contracts\Customs;
 
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
@@ -10,8 +11,6 @@ interface CustomRequestContract
 {
     /**
      * Getting related request.
-     * 
-     * @return RequestContract
      */
     public function getRequest(): RequestContract;
 }

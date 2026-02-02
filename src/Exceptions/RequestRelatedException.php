@@ -1,46 +1,44 @@
 <?php
+
 namespace Henrotaym\LaravelApiClient\Exceptions;
 
 use Exception;
-use Throwable;
 use Henrotaym\LaravelApiClient\Contracts\RequestContract;
 use Henrotaym\LaravelApiClient\Contracts\ResponseContract;
+use Throwable;
 
 class RequestRelatedException extends Exception
 {
     /**
      * Exception message.
-     * 
+     *
      * @var string
      */
-    protected $message = "Request failed.";
+    protected $message = 'Request failed.';
 
     /**
      * Request that actually failed.
-     * 
+     *
      * @var RequestContract
      */
     protected $request;
 
     /**
      * Response sent back. Null meaning failure before even making request to resource.
-     * 
+     *
      * @var ResponseContract|null
      */
     protected $response;
 
     /**
      * Potential error happening before making request.
-     * 
+     *
      * @var Throwable|null Null if no exception during process.
      */
     protected $error;
 
     /**
      * Setting linked request
-     * 
-     * @param RequestContract $request
-     * @return self
      */
     public function setRequest(RequestContract $request): self
     {
@@ -51,9 +49,6 @@ class RequestRelatedException extends Exception
 
     /**
      * Setting linked response
-     * 
-     * @param ResponseContract $response
-     * @return self
      */
     public function setResponse(ResponseContract $response): self
     {
@@ -64,9 +59,6 @@ class RequestRelatedException extends Exception
 
     /**
      * Setting error happening when making request.
-     * 
-     * @param Throwable $error
-     * @return self
      */
     public function setError(Throwable $error): self
     {
@@ -77,8 +69,6 @@ class RequestRelatedException extends Exception
 
     /**
      * Getting related response if any.
-     * 
-     * @return ?ResponseContract
      */
     public function getResponse(): ?ResponseContract
     {
@@ -87,8 +77,6 @@ class RequestRelatedException extends Exception
 
     /**
      * Getting related error if any.
-     * 
-     * @return ?Throwable
      */
     public function getError(): ?Throwable
     {
@@ -97,22 +85,18 @@ class RequestRelatedException extends Exception
 
     /**
      * Telling if related to any error.
-     * 
-     * @return bool
      */
     public function hasError(): bool
     {
-        return !!$this->error;
+        return (bool) $this->error;
     }
 
     /**
      * Telling if related to any response.
-     * 
-     * @return bool
      */
     public function hasResponse(): bool
     {
-        return !!$this->response;
+        return (bool) $this->response;
     }
 
     /**
@@ -129,8 +113,6 @@ class RequestRelatedException extends Exception
 
     /**
      * Exception additional context.
-     * 
-     * @return array
      */
     public function additionalContext(): array
     {

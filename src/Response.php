@@ -1,33 +1,32 @@
 <?php
+
 namespace Henrotaym\LaravelApiClient;
 
+use Henrotaym\LaravelApiClient\Contracts\ResponseContract;
 use Henrotaym\LaravelHelpers\Facades\Helpers;
 use Illuminate\Http\Client\Response as ClientResponse;
-use Henrotaym\LaravelApiClient\Contracts\ResponseContract;
 
 class Response implements ResponseContract
 {
     /**
      * Underlying response
-     * 
+     *
      * @var ClientResponse
      */
     protected $response;
 
     /**
-     * Constructing response 
-     * 
-     * @param ClientResponse $response Underlying response.
+     * Constructing response
+     *
+     * @param  ClientResponse  $response  Underlying response.
      */
     public function __construct(ClientResponse $response)
     {
         $this->response = $response;
     }
 
-    /** 
+    /**
      * Getting underlying response
-     * 
-     * @return ClientResponse
      */
     public function response(): ClientResponse
     {
@@ -36,8 +35,6 @@ class Response implements ResponseContract
 
     /**
      * Telling if response can be considered as successful
-     * 
-     * @return bool
      */
     public function ok(): bool
     {
@@ -46,18 +43,18 @@ class Response implements ResponseContract
 
     /**
      * Getting response actual body.
-     * 
+     *
      * @return array|null|stdClass
      */
     public function get(bool $as_array = false)
     {
-        [$error, $body] = Helpers::try(function() use ($as_array) {
+        [$error, $body] = Helpers::try(function () use ($as_array) {
             return json_decode($this->response->body(), $as_array);
         });
 
-        if ($error):
+        if ($error) {
             return null;
-        endif;
+        }
 
         return $body;
     }
@@ -75,9 +72,9 @@ class Response implements ResponseContract
     public function toArray()
     {
         return [
-            "ok" => $this->ok(),
-            "body" => $this->get(true),
-            "status_code" => $this->getStatusCode()
+            'ok' => $this->ok(),
+            'body' => $this->get(true),
+            'status_code' => $this->getStatusCode(),
         ];
     }
 }
