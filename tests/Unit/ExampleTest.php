@@ -8,15 +8,14 @@ use Henrotaym\LaravelApiClient\Encoders\JsonEncoder;
 use Henrotaym\LaravelApiClient\Request;
 use Henrotaym\LaravelApiClient\Tests\TestCase;
 use Henrotaym\LaravelPackageVersioning\Testing\Traits\InstallPackageTest;
+use PHPUnit\Framework\Attributes\Test;
 
 class ExampleTest extends TestCase
 {
     use InstallPackageTest;
 
-    /**
-     * @test
-     */
-    public function returning_true()
+    #[Test]
+    public function returning_true(): void
     {
         /** @var ClientContract */
         $client = $this->app->make(ClientContract::class);
@@ -43,7 +42,7 @@ class ExampleTest extends TestCase
         $this->assertTrue(is_array($response->error()->context()));
     }
 
-    public function test_that_formating_resource()
+    public function test_that_formating_resource(): void
     {
         $data = ['test' => new TestResource('test')];
         $formater = new JsonEncoder;
@@ -54,7 +53,7 @@ class ExampleTest extends TestCase
         );
     }
 
-    public function test_that_formating_arrayable()
+    public function test_that_formating_arrayable(): void
     {
         $data = ['test' => new TestArrayable];
         $formater = new JsonEncoder;
@@ -65,7 +64,7 @@ class ExampleTest extends TestCase
         );
     }
 
-    public function test_that_formating_boolean_as_binary()
+    public function test_that_formating_boolean_as_binary(): void
     {
         $data = ['test' => true];
         $formater = new JsonEncoder;
@@ -76,7 +75,7 @@ class ExampleTest extends TestCase
         );
     }
 
-    public function test_that_not_formating_boolean_as_binary()
+    public function test_that_not_formating_boolean_as_binary(): void
     {
         $data = ['test' => true];
         $formater = new JsonEncoder;
@@ -87,7 +86,7 @@ class ExampleTest extends TestCase
         );
     }
 
-    public function test_that_setting_certificate()
+    public function test_that_setting_certificate(): void
     {
         $path = 'test/certificate.pem';
         $passphrase = 'password';
@@ -102,7 +101,7 @@ class ExampleTest extends TestCase
         );
     }
 
-    public function test_that_setting_key()
+    public function test_that_setting_key(): void
     {
         $path = 'test/private_key.pem';
         $request = new Request;
@@ -116,7 +115,7 @@ class ExampleTest extends TestCase
         );
     }
 
-    public function test_that_getting_query()
+    public function test_that_getting_query(): void
     {
         $query = ['hello' => 'nice'];
         $request = new Request;
@@ -129,7 +128,7 @@ class ExampleTest extends TestCase
         );
     }
 
-    public function test_that_getting_query_less_url()
+    public function test_that_getting_query_less_url(): void
     {
         $query = ['hello' => 'nice'];
         $url = '/test/nice';
@@ -144,7 +143,7 @@ class ExampleTest extends TestCase
         );
     }
 
-    public function test_that_getting_query_less_url_if_url_contains_parameters()
+    public function test_that_getting_query_less_url_if_url_contains_parameters(): void
     {
         $query = ['hello' => 'nice'];
         $url = '/test/nice';

@@ -6,14 +6,7 @@
     "main": "index.js",
     "license": "MIT",
     "private": true,
-    "devDependencies": {
-        "@changesets/cli": "^2.29.8",
-        "lefthook": "^2.0.16"
-    },
     "scripts": {
-        "push": "git push && git push --tags",
-        "postversion": "npm run push",
-        "commit": "gitmoji -c && npm run push",
-        "commit:all": "git add . && npm run commit"
+        "postversion": "git push && git push --tags"
     }
 }

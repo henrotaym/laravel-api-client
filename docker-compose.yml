@@ -7,13 +7,3 @@ services:
     image: "laravel-api-client-php-local"
     volumes:
       - ./:/opt/apps/app
-    env_file:
-      - .env
-  bun:
-    build:
-      context: .
-      target: bun
-      dockerfile: Dockerfile
-    image: "laravel-api-client-bun-local"
-    volumes:
-      - ./:/opt/apps/app

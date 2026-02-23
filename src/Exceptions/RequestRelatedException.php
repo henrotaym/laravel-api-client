@@ -102,12 +102,12 @@ class RequestRelatedException extends Exception
     /**
      * Exception context to log with.
      */
-    public function context()
+    public function context(): array
     {
         return array_merge([
             'request' => $this->request->toArray(),
-            'response' => optional($this->response)->toArray(),
-            'error' => optional($this->error)->getMessage(),
+            'response' => $this->response?->toArray(),
+            'error' => $this->error?->getMessage(),
         ], $this->additionalContext());
     }
 
