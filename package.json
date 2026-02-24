@@ -1,6 +1,6 @@
 {
     "name": "@henrotaym/laravel-api-client",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "author": "Mathieu Henrotay <mathieu.henrotay@gmail.com>",
     "repository": "git@github.com:henrotaym/laravel-api-client.git",
     "main": "index.js",
